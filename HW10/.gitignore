@@ -1,0 +1,10 @@
+/cmake_install.cmake
+/build
+/.vscode
+/CMakeFiles
+/Makefile
+/CMakeCache.txt
+*.profdata
+*.profraw
+*.txt
+/homework_10

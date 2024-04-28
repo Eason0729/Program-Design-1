@@ -1,0 +1,27 @@
+profile:
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-fprofile-instr-generate" -DCMAKE_CXX_FLAGS="-fprofile-instr-generate" -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" -C clang-cmakeinit.cmake .
+    make
+    LLVM_PROFILE_FILE="homework_11.profraw" ./homework_11
+
+release-profile:
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-fprofile-instr-use=homework_11.profdata" -DCMAKE_CXX_FLAGS="-fprofile-instr-use=homework_11.profdata" -C clang-cmakeinit.cmake .
+    llvm-profdata merge -output=homework_11.profdata homework_11.profraw
+    make VERBOSE=1
+
+release:
+    cmake -C clang-cmakeinit.cmake .
+    make
+
+run: 
+    cmake -DCMAKE_C_FLAGS="-fstandalone-debug" -DCMAKE_BUILD_TYPE=Debug -C clang-cmakeinit.cmake .
+    make VERBOSE=1
+    rm a.txt
+    ./homework_11 > a.txt
+
+mem-test:
+    cmake -DCMAKE_C_FLAGS="-fsanitize=address -fstandalone-debug" -DCMAKE_BUILD_TYPE=Debug -C clang-cmakeinit.cmake .
+    make VERBOSE=1
+    ./homework_11
+
+clean:
+    rm -fr CMakeFiles build CMakeCache.txt Makefile cmake_install.cmake *.csv *.profdata *.profraw
